@@ -1,4 +1,6 @@
+using API.Helpers;
 using Core.Interfaces;
+using Core.Specifications;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +25,10 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddAutoMapper(typeof(MappingProfile)); 
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(ISpecification<>), typeof(BaseSpecification<>));
             services.AddDbContext<StoreContext>(options =>
 options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
         }
@@ -39,6 +44,7 @@ options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
