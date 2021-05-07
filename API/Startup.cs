@@ -4,7 +4,7 @@ using API.Helpers;
 using API.MiddleWare;
 using Core.Interfaces;
 using Core.Specifications;
-using Infrastructure.Data;
+using Infrastructure.Data; 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +28,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(typeof(MappingProfile)); 
             services.AddDbContext<StoreContext>(options =>
                      options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
             services.AddApplicationServices();
