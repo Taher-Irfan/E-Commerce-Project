@@ -4,6 +4,7 @@ import { IProduct } from 'src/app/shared/models/product';
 import { IProductType } from 'src/app/shared/models/productType';
 import { ShopService } from '../shop.service';
 import {CurrencyPipe, getCurrencySymbol } from '@angular/common';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 @Component({
   selector: 'app-product-details',
@@ -12,9 +13,13 @@ import {CurrencyPipe, getCurrencySymbol } from '@angular/common';
 })
 export class ProductDetailsComponent implements OnInit {
   product: IProduct
-  constructor(private shopService: ShopService, private router: ActivatedRoute) { }
+  constructor(private shopService: ShopService, private router: ActivatedRoute,
+    private bs: BreadcrumbService) { 
+      this.bs.set('@productDetails', ' ');
+    }
 
   ngOnInit(): void {
+    
    this.loadProduct();
   }
   loadProduct()
@@ -24,6 +29,7 @@ export class ProductDetailsComponent implements OnInit {
       (response) =>
       {
         this.product=response;
+        this.bs.set('@productDetails', this.product.name)
       },
       (error) =>
       {
