@@ -13,7 +13,8 @@ import { SharedModule } from '../shared/shared.module';
 
   ],
   exports: [
-    HomeComponent
+    HomeComponent,
+    
   ]
 })
 export class HomeModule { }
