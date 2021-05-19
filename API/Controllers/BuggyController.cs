@@ -1,5 +1,6 @@
 ﻿using API.Errors;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,14 @@ namespace API.Controllers
             _context = context;
 
         }
+
+        [HttpGet("testauth")]
+        [Authorize]
+        public ActionResult TestAuthorization()
+        {
+            return Ok("got it");
+        }
+
 
         [HttpGet("notfound")]
         public ActionResult GetNotFoundRequest()

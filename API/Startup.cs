@@ -2,9 +2,12 @@ using API.Errors;
 using API.Extensions;
 using API.Helpers;
 using API.MiddleWare;
+using AutoMapper;
 using Core.Interfaces;
 using Core.Specifications;
 using Infrastructure.Data;
+using Infrastructure.Identity;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,8 +33,13 @@ namespace API
         {
             services.AddControllers();
             services.AddAutoMapper(typeof(MappingProfile));
+            services.AddScoped<ITokenService, TokenService>();
             services.AddDbContext<StoreContext>(options =>
                      options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                     options.UseNpgsql(_configuration.GetConnectionString("IdentityConnection")));
+
+
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
                 var configuration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
@@ -39,6 +47,7 @@ namespace API
             });
          
             services.AddApplicationServices();
+            services.AddIdentityServices(_configuration);
             services.AddSwaggerDocumentation();
             services.AddCors(opt =>
             {
@@ -60,6 +69,7 @@ namespace API
             app.UseRouting();
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseSwaggerDocumentation();
             app.UseEndpoints(endpoints =>
